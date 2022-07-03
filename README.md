@@ -21,3 +21,13 @@ A "project" is described by one on many docker-compose files.
 - Ant Design
 - Eslint
 - Prettier
+
+## To Do
+
+- [ ] List of projects
+- [ ] Link the list with the configuration file
+- [ ] Add the creation of a project
+- [ ] Allow to start a project
+- [ ] Allow to stop a project
+- [ ] Detect the status of a project (launched or not)
+- [ ] Allow open shell from location of project
