@@ -1,7 +1,9 @@
+import Title from "./Title/title";
+
 const Main = () => {
   return (
     <div>
-      <h1>Hello world</h1>
+      <Title title="Mes projets" />
     </div>
   )
 }
