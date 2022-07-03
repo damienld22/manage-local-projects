@@ -1,7 +1,7 @@
-import { Typography } from "antd"
+import { Typography } from 'antd';
 
 interface TitleProps {
-  title: string
+  title: string;
 }
 
 const Title = ({ title }: TitleProps) => {
@@ -9,7 +9,7 @@ const Title = ({ title }: TitleProps) => {
     <Typography>
       <h1>{title}</h1>
     </Typography>
-  )
+  );
 };
 
 export default Title;
