@@ -5,7 +5,7 @@ import useJSONConfigurationFile from './useJSONConfigurationFile';
 
 export default function useProjects() {
   const projectsContext = useContext(ProjectsContext);
-  const { getJSON } = useJSONConfigurationFile();
+  const { getJSON, setJSON } = useJSONConfigurationFile();
 
   if (!projectsContext) {
     throw new Error('The hook useProjects must be inside a ProjectsContextProvider');
@@ -24,8 +24,23 @@ export default function useProjects() {
     return contentConfigFile as Array<Project>;
   }
 
+  function addNewProject(project: Project) {
+    try {
+      const updatedProjects = [];
+      if (projectsContext?.projects) {
+        updatedProjects.push(...projectsContext.projects);
+      }
+      updatedProjects.push(project);
+      projectsContext?.setProjects(updatedProjects);
+      setJSON(updatedProjects);
+    } catch (err) {
+      console.error('[useProject] Failed to add new project', err);
+    }
+  }
+
   return {
     init,
     projects: projectsContext.projects,
+    addNewProject,
   };
 }
