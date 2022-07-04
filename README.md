@@ -24,8 +24,8 @@ A "project" is described by one on many docker-compose files.
 
 ## To Do
 
-- [ ] List of projects
-- [ ] Link the list with the configuration file
+- [x] List of projects
+- [x] Link the list with the configuration file
 - [ ] Add the creation of a project
 - [ ] Allow to start a project
 - [ ] Allow to stop a project
