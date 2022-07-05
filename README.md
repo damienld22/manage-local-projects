@@ -27,8 +27,9 @@ A "project" is described by one on many docker-compose files.
 - [x] List of projects
 - [x] Link the list with the configuration file
 - [x] Add the creation of a project
-- [ ] Add delete of project
+- [x] Add delete of project
 - [ ] Allow to start a project
 - [ ] Allow to stop a project
+- [ ] Error handling
 - [ ] Detect the status of a project (launched or not)
 - [ ] Allow open shell from location of project

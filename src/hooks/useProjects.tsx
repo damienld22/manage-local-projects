@@ -38,9 +38,22 @@ export default function useProjects() {
     }
   }
 
+  function deleteProject(projectName: string): void {
+    try {
+      const updatedProjects = projectsContext?.projects.filter((elt) => elt.name !== projectName);
+      if (updatedProjects) {
+        projectsContext?.setProjects(updatedProjects);
+        setJSON(updatedProjects);
+      }
+    } catch (err) {
+      console.error('[useProject] Failed to delete project', err);
+    }
+  }
+
   return {
     init,
     projects: projectsContext.projects,
     addNewProject,
+    deleteProject,
   };
 }
