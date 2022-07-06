@@ -27,6 +27,11 @@ const AddProjectModal = ({ isVisible, onOk, onCancel }: AddProjectModalProps) =>
     onCancel();
   };
 
+  const handleOk = () => {
+    onOk(newProject);
+    setNewProject(emptyProject);
+  };
+
   const selectElementAndReturnPath = async (type: 'directory' | 'file'): Promise<string> => {
     try {
       const { filePaths } = await dialog.showOpenDialog({
@@ -49,7 +54,7 @@ const AddProjectModal = ({ isVisible, onOk, onCancel }: AddProjectModalProps) =>
     <Modal
       title="Ajout d'un projet"
       visible={isVisible}
-      onOk={() => onOk(newProject)}
+      onOk={handleOk}
       onCancel={handleCancel}
       okButtonProps={{ disabled: isValidateButtonDisabled() }}
     >

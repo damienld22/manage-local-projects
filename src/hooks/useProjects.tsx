@@ -1,11 +1,16 @@
 import { useContext } from 'react';
+import { homedir } from 'os';
 import { ProjectsContext } from '../contexts/ProjectsContext';
+import { Container } from '../models/container';
 import { Project } from '../models/project';
+import { isChildOf } from '../utils';
+import useDocker from './useDocker';
 import useJSONConfigurationFile from './useJSONConfigurationFile';
 
 export default function useProjects() {
   const projectsContext = useContext(ProjectsContext);
   const { getJSON, setJSON } = useJSONConfigurationFile();
+  const { getLaunchedContainers } = useDocker();
 
   if (!projectsContext) {
     throw new Error('The hook useProjects must be inside a ProjectsContextProvider');
@@ -34,7 +39,7 @@ export default function useProjects() {
       projectsContext?.setProjects(updatedProjects);
       setJSON(updatedProjects);
     } catch (err) {
-      console.error('[useProject] Failed to add new project', err);
+      console.error('[useProjects] Failed to add new project', err);
     }
   }
 
@@ -46,8 +51,35 @@ export default function useProjects() {
         setJSON(updatedProjects);
       }
     } catch (err) {
-      console.error('[useProject] Failed to delete project', err);
+      console.error('[useProjects] Failed to delete project', err);
     }
+  }
+
+  async function refreshProjectsState(): Promise<void> {
+    console.log('[useProjects] refresh projects state');
+
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve) => {
+      if (projectsContext) {
+        const listOfRunningContainers = await getLaunchedContainers();
+        const updatedProjects: Array<Project> = projectsContext.projects.map((project) => {
+          const launchedContainersUnderProject: Array<Container> = listOfRunningContainers.filter(
+            (container) =>
+              isChildOf(container.dockerComposeLocation, project.location.replace('~', homedir())),
+          );
+
+          return {
+            ...project,
+            status: launchedContainersUnderProject.length > 0 ? 'started' : 'stopped',
+          };
+        });
+
+        projectsContext.setProjects(updatedProjects);
+        setJSON(updatedProjects);
+        resolve();
+      }
+      resolve();
+    });
   }
 
   return {
@@ -55,5 +87,6 @@ export default function useProjects() {
     projects: projectsContext.projects,
     addNewProject,
     deleteProject,
+    refreshProjectsState,
   };
 }
