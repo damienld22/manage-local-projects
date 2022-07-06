@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { homedir } from 'os';
 import { ProjectsContext } from '../contexts/ProjectsContext';
 import { Container } from '../models/container';
-import { Project } from '../models/project';
-import { isChildOf } from '../utils';
+import { Project, ProjectStatus } from '../models/project';
+import { execCommand, isChildOf } from '../utils';
 import useDocker from './useDocker';
 import useJSONConfigurationFile from './useJSONConfigurationFile';
 
@@ -55,6 +55,67 @@ export default function useProjects() {
     }
   }
 
+  async function startProject(projectName: string): Promise<void> {
+    console.log(`[useProjects] start project ${projectName}`);
+    if (projectsContext) {
+      const associatedProject = projectsContext.projects.find(
+        (project) => project.name === projectName,
+      );
+
+      if (associatedProject) {
+        const scriptPath = associatedProject.startScriptLocation;
+        console.log(`[useProjects] execute : ${scriptPath}`);
+        try {
+          if (scriptPath) {
+            await execCommand(scriptPath);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+        console.log('[useProjects] Script done');
+        updateStatusProject(projectName, 'started');
+      }
+    }
+
+    return Promise.resolve();
+  }
+
+  async function stopProject(projectName: string): Promise<void> {
+    console.log(`[useProjects] stop project ${projectName}`);
+
+    if (projectsContext) {
+      const associatedProject = projectsContext.projects.find(
+        (project) => project.name === projectName,
+      );
+
+      if (associatedProject) {
+        const scriptPath = associatedProject.stopScriptLocation;
+        console.log(`[useProjects] execute : ${scriptPath}`);
+        try {
+          if (scriptPath) {
+            await execCommand(scriptPath);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+        console.log('[useProjects] Script done');
+        updateStatusProject(projectName, 'stopped');
+      }
+    }
+
+    return Promise.resolve();
+  }
+
+  function updateStatusProject(projectName: string, status: ProjectStatus): void {
+    if (projectsContext) {
+      const updatedProjects = projectsContext.projects.map((project) =>
+        project.name === projectName ? { ...project, status } : project,
+      );
+      projectsContext?.setProjects(updatedProjects);
+      setJSON(updatedProjects);
+    }
+  }
+
   async function refreshProjectsState(): Promise<void> {
     console.log('[useProjects] refresh projects state');
 
@@ -88,5 +149,7 @@ export default function useProjects() {
     addNewProject,
     deleteProject,
     refreshProjectsState,
+    startProject,
+    stopProject,
   };
 }

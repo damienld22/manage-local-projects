@@ -29,9 +29,10 @@ A "project" is described by one on many docker-compose files.
 - [x] Add the creation of a project
 - [x] Add delete of project
 - [x] Detect the status of a project (launched or not)
-- [ ] Edit project
-- [ ] Allow to start a project
-- [ ] Allow to stop a project
-- [ ] Error handling
+- [x] Allow to start a project
+- [x] Allow to stop a project
 - [ ] Allow open shell from location of project
+- [ ] Edit project
+- [ ] Error handling
+- [ ] Add snackbar when projects are started and stopped
 - [ ] Install jq when install this tool
