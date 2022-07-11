@@ -55,6 +55,20 @@ export default function useProjects() {
     }
   }
 
+  function editProject(name: string, project: Project): void {
+    try {
+      const updatedProjects = projectsContext?.projects.map((elt) => {
+        return elt.name === name ? project : elt;
+      });
+      if (updatedProjects) {
+        projectsContext?.setProjects(updatedProjects);
+        setJSON(updatedProjects);
+      }
+    } catch (err) {
+      console.error('[useProjects] Failed to delete project', err);
+    }
+  }
+
   async function startProject(projectName: string): Promise<void> {
     console.log(`[useProjects] start project ${projectName}`);
     if (projectsContext) {
@@ -151,5 +165,6 @@ export default function useProjects() {
     refreshProjectsState,
     startProject,
     stopProject,
+    editProject,
   };
 }

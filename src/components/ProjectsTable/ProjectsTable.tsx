@@ -1,4 +1,10 @@
-import { DeleteOutlined, PlayCircleOutlined, StopOutlined, CopyOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  PlayCircleOutlined,
+  StopOutlined,
+  CopyOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
 import { Button, Tag, Tooltip } from 'antd';
 import Table, { ColumnsType } from 'antd/lib/table';
 import { useState } from 'react';
@@ -9,7 +15,13 @@ import copy from 'copy-to-clipboard';
 import styles from './ProjectsTable.module.css';
 import useSnackbar from '../../hooks/useSnackbar';
 
-const ProjectsTable = ({ projects }: { projects: Array<Project> }) => {
+const ProjectsTable = ({
+  projects,
+  onEditProject,
+}: {
+  projects: Array<Project>;
+  onEditProject: (name: string) => void;
+}) => {
   const { deleteProject, startProject, stopProject } = useProjects();
   const [toDeleteProjectName, setToDeleteProjectName] = useState<string | null>(null);
   const [loadingStart, setLoadingStart] = useState<string | null>(null);
@@ -62,7 +74,7 @@ const ProjectsTable = ({ projects }: { projects: Array<Project> }) => {
               icon={<CopyOutlined />}
               onClick={() =>
                 copy(elt, {
-                  onCopy: () => displaySuccessMessage('Chemin copié dans le presse-papier !', 3000),
+                  onCopy: () => displaySuccessMessage('Chemin copié dans le presse-papier !', 3),
                 })
               }
             />
@@ -73,6 +85,7 @@ const ProjectsTable = ({ projects }: { projects: Array<Project> }) => {
     {
       title: 'Actions',
       key: 'actions',
+      align: 'right',
       render: (elt) => (
         <div>
           <Tooltip overlay='Démarrer le projet'>
@@ -95,7 +108,16 @@ const ProjectsTable = ({ projects }: { projects: Array<Project> }) => {
               icon={<StopOutlined />}
             />
           </Tooltip>
-          <Tooltip overlay='Supprimer le projet'>
+          <Tooltip overlay='Éditer'>
+            <Button
+              onClick={() => onEditProject(elt.name)}
+              shape='circle'
+              type='ghost'
+              className={styles.action}
+              icon={<EditOutlined />}
+            />
+          </Tooltip>
+          <Tooltip overlay='Supprimer'>
             <Button
               onClick={() => setToDeleteProjectName(elt.name)}
               shape='circle'

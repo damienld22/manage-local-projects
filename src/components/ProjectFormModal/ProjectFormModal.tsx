@@ -1,14 +1,15 @@
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Input, Modal } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Project } from '../../models/project';
-import styles from './AddProjectModal.module.css';
+import styles from './ProjectFormModal.module.css';
 import { dialog } from '@electron/remote';
 
-interface AddProjectModalProps {
+interface ProjectFormModalProps {
   isVisible: boolean;
   onOk: (project: Project) => void;
   onCancel: () => void;
+  existingProject?: Project;
 }
 
 const emptyProject: Project = {
@@ -19,8 +20,19 @@ const emptyProject: Project = {
   stopScriptLocation: '',
 };
 
-const AddProjectModal = ({ isVisible, onOk, onCancel }: AddProjectModalProps) => {
+const ProjectFormModal = ({
+  isVisible,
+  onOk,
+  onCancel,
+  existingProject,
+}: ProjectFormModalProps) => {
   const [newProject, setNewProject] = useState<Project>(emptyProject);
+
+  useEffect(() => {
+    if (existingProject) {
+      setNewProject(existingProject);
+    }
+  }, [existingProject]);
 
   const handleCancel = () => {
     setNewProject(emptyProject);
@@ -39,8 +51,8 @@ const AddProjectModal = ({ isVisible, onOk, onCancel }: AddProjectModalProps) =>
       });
       return filePaths[0];
     } catch (err) {
-      console.log('[AddProjectModal] Failed to select folder location', err);
-      throw new Error('[AddProjectModal] Failed to select folder location');
+      console.log('[ProjectFormModal] Failed to select folder location', err);
+      throw new Error('[ProjectFormModal] Failed to select folder location');
     }
   };
 
@@ -61,11 +73,13 @@ const AddProjectModal = ({ isVisible, onOk, onCancel }: AddProjectModalProps) =>
       <Input
         className={styles.input}
         placeholder='Nom du projet'
+        value={newProject.name || ''}
         onChange={(evt) => setNewProject((prev) => ({ ...prev, name: evt.target.value }))}
       />
       <Input
         className={styles.input}
         placeholder='Description du projet'
+        value={newProject.description || ''}
         onChange={(evt) => setNewProject((prev) => ({ ...prev, description: evt.target.value }))}
       />
 
@@ -118,4 +132,4 @@ const AddProjectModal = ({ isVisible, onOk, onCancel }: AddProjectModalProps) =>
   );
 };
 
-export default AddProjectModal;
+export default ProjectFormModal;

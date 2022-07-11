@@ -32,7 +32,7 @@ A "project" is described by one on many docker-compose files.
 - [x] Allow to start a project
 - [x] Allow to stop a project
 - [x] Allow copy location of project to clipboard
-- [ ] Edit project
+- [x] Edit project
 - [ ] Error handling
-- [ ] Add snackbar when projects are started and stopped
+- [ ] Add snackbar when actions are done
 - [ ] Install jq when install this tool
