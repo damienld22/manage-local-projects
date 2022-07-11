@@ -31,7 +31,7 @@ A "project" is described by one on many docker-compose files.
 - [x] Detect the status of a project (launched or not)
 - [x] Allow to start a project
 - [x] Allow to stop a project
-- [ ] Allow open shell from location of project
+- [x] Allow copy location of project to clipboard
 - [ ] Edit project
 - [ ] Error handling
 - [ ] Add snackbar when projects are started and stopped

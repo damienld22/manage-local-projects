@@ -1,17 +1,20 @@
-import { DeleteOutlined, PlayCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlayCircleOutlined, StopOutlined, CopyOutlined } from '@ant-design/icons';
 import { Button, Tag, Tooltip } from 'antd';
 import Table, { ColumnsType } from 'antd/lib/table';
 import { useState } from 'react';
 import useProjects from '../../hooks/useProjects';
 import { Project } from '../../models/project';
 import DeleteProjectModal from '../DeleteProjectModal/DeleteProjectModal';
+import copy from 'copy-to-clipboard';
 import styles from './ProjectsTable.module.css';
+import useSnackbar from '../../hooks/useSnackbar';
 
 const ProjectsTable = ({ projects }: { projects: Array<Project> }) => {
   const { deleteProject, startProject, stopProject } = useProjects();
   const [toDeleteProjectName, setToDeleteProjectName] = useState<string | null>(null);
   const [loadingStart, setLoadingStart] = useState<string | null>(null);
   const [loadingStop, setLoadingStop] = useState<string | null>(null);
+  const { displaySuccessMessage } = useSnackbar();
 
   const handleStart = async (name: string) => {
     setLoadingStart(name);
@@ -51,6 +54,21 @@ const ProjectsTable = ({ projects }: { projects: Array<Project> }) => {
       title: 'Localisation',
       dataIndex: 'location',
       key: 'location',
+      render: (elt) => (
+        <div className={styles.location}>
+          <p>{elt}</p>
+          <Tooltip overlay='Copier le chemin'>
+            <Button
+              icon={<CopyOutlined />}
+              onClick={() =>
+                copy(elt, {
+                  onCopy: () => displaySuccessMessage('Chemin copié dans le presse-papier !', 3000),
+                })
+              }
+            />
+          </Tooltip>
+        </div>
+      ),
     },
     {
       title: 'Actions',
