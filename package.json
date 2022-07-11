@@ -24,24 +24,18 @@
       "packagerConfig": {},
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "manage_local_projects"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
           "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
+          "config": {
+            "options": {
+              "productName": "Mes projets",
+              "genericName": "Mes projets",
+              "version": "1.0.0",
+              "maintainer": "Damien Le Dantec",
+              "homepage": "https://github.com/damienld22/manage-local-projects",
+              "depends": "jq",
+              "preDepends": "jq"
+            }
+          }
         }
       ],
       "plugins": [

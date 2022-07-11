@@ -4,6 +4,18 @@
 
 Small tool to manage local development projects that use Docker.
 
+## Dependencies
+
+You need to install `jq` to use this tool.
+
+```sh
+sudo apt install jq
+```
+
+## Install
+
+Run `npm run make` then a `.deb` file will be created in `./out/make` folder.
+
 ## Features
 
 A "project" is described by one on many docker-compose files.
@@ -14,7 +26,7 @@ A "project" is described by one on many docker-compose files.
 - Add custom scripts to any project
 - And more will come
 
-## Techno
+## Technos
 
 - React
 - Electron
@@ -22,18 +34,17 @@ A "project" is described by one on many docker-compose files.
 - Eslint
 - Prettier
 
-## To Do
+## Changelog
 
-- [x] List of projects
-- [x] Link the list with the configuration file
-- [x] Add the creation of a project
-- [x] Add delete of project
-- [x] Detect the status of a project (launched or not)
-- [x] Allow to start a project
-- [x] Allow to stop a project
-- [x] Allow copy location of project to clipboard
-- [x] Edit project
-- [x] Add snackbar when actions are done
-- [x] Error handling
-- [ ] Packaging
-- [ ] Install jq when install this tool
+### 1.0.0 11/07/22
+
+- List of projects
+- Add the creation of a project
+- Add delete of project
+- Detect the status of a project (launched or not)
+- Allow to start a project
+- Allow to stop a project
+- Allow copy location of project to clipboard
+- Edit project
+- Add snackbar when actions are done
+- Error handling
