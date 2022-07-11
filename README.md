@@ -33,6 +33,6 @@ A "project" is described by one on many docker-compose files.
 - [x] Allow to stop a project
 - [x] Allow copy location of project to clipboard
 - [x] Edit project
+- [x] Add snackbar when actions are done
 - [ ] Error handling
-- [ ] Add snackbar when actions are done
 - [ ] Install jq when install this tool

@@ -44,10 +44,14 @@ const ProjectFormModal = ({
     setNewProject(emptyProject);
   };
 
-  const selectElementAndReturnPath = async (type: 'directory' | 'file'): Promise<string> => {
+  const selectElementAndReturnPath = async (
+    type: 'directory' | 'file',
+    defaultPath?: string,
+  ): Promise<string> => {
     try {
       const { filePaths } = await dialog.showOpenDialog({
         properties: [type === 'directory' ? 'openDirectory' : 'openFile'],
+        defaultPath,
       });
       return filePaths[0];
     } catch (err) {
@@ -100,7 +104,7 @@ const ProjectFormModal = ({
       <div className={styles.input}>
         <Button
           onClick={() => {
-            selectElementAndReturnPath('file').then((path) =>
+            selectElementAndReturnPath('file', newProject.location).then((path) =>
               setNewProject((prev) => ({ ...prev, startScriptLocation: path })),
             );
           }}
@@ -116,7 +120,7 @@ const ProjectFormModal = ({
       <div className={styles.input}>
         <Button
           onClick={() => {
-            selectElementAndReturnPath('file').then((path) =>
+            selectElementAndReturnPath('file', newProject.location).then((path) =>
               setNewProject((prev) => ({ ...prev, stopScriptLocation: path })),
             );
           }}

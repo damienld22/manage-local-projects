@@ -32,12 +32,14 @@ const ProjectsTable = ({
     setLoadingStart(name);
     await startProject(name);
     setLoadingStart(null);
+    displaySuccessMessage(`${name} est démarré !`);
   };
 
   const handleStop = async (name: string) => {
     setLoadingStop(name);
     await stopProject(name);
     setLoadingStop(null);
+    displaySuccessMessage(`${name} est arrêté !`);
   };
 
   const columns: ColumnsType<Project> = [
@@ -136,6 +138,7 @@ const ProjectsTable = ({
     if (projectName) {
       deleteProject(projectName);
       setToDeleteProjectName(null);
+      displaySuccessMessage(`Projet ${projectName} supprimé`);
     }
   };
 

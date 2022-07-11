@@ -6,11 +6,13 @@ import 'antd/dist/antd.css';
 import AddProjectButton from './AddProjectButton/AddProjectButton';
 import ProjectFormModal from './ProjectFormModal/ProjectFormModal';
 import { Project } from '../models/project';
+import useSnackbar from '../hooks/useSnackbar';
 
 const Main = () => {
   const { init, projects, addNewProject, editProject } = useProjects();
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
   const [toEditProject, setToEditProject] = useState<Project | undefined>();
+  const { displaySuccessMessage } = useSnackbar();
 
   useEffect(() => {
     init();
@@ -23,8 +25,10 @@ const Main = () => {
   const handleCreateProject = (project: Project) => {
     if (toEditProject) {
       editProject(toEditProject.name, project);
+      displaySuccessMessage(`Projet ${toEditProject.name} édité`);
     } else {
       addNewProject(project);
+      displaySuccessMessage(`Projet ${project.name} ajouté`);
     }
     handleClose();
   };
