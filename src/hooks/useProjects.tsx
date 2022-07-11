@@ -40,6 +40,7 @@ export default function useProjects() {
       setJSON(updatedProjects);
     } catch (err) {
       console.error('[useProjects] Failed to add new project', err);
+      throw err;
     }
   }
 
@@ -52,6 +53,7 @@ export default function useProjects() {
       }
     } catch (err) {
       console.error('[useProjects] Failed to delete project', err);
+      throw err;
     }
   }
 
@@ -66,6 +68,7 @@ export default function useProjects() {
       }
     } catch (err) {
       console.error('[useProjects] Failed to delete project', err);
+      throw err;
     }
   }
 
@@ -88,6 +91,9 @@ export default function useProjects() {
         }
         console.log('[useProjects] Script done');
         updateStatusProject(projectName, 'started');
+      } else {
+        console.log('[useProjects] project not found');
+        throw new Error('Project not found');
       }
     }
 
@@ -114,6 +120,9 @@ export default function useProjects() {
         }
         console.log('[useProjects] Script done');
         updateStatusProject(projectName, 'stopped');
+      } else {
+        console.log('[useProjects] project not found');
+        throw new Error('Project not found');
       }
     }
 
@@ -122,11 +131,16 @@ export default function useProjects() {
 
   function updateStatusProject(projectName: string, status: ProjectStatus): void {
     if (projectsContext) {
-      const updatedProjects = projectsContext.projects.map((project) =>
-        project.name === projectName ? { ...project, status } : project,
-      );
-      projectsContext?.setProjects(updatedProjects);
-      setJSON(updatedProjects);
+      try {
+        const updatedProjects = projectsContext.projects.map((project) =>
+          project.name === projectName ? { ...project, status } : project,
+        );
+        projectsContext?.setProjects(updatedProjects);
+        setJSON(updatedProjects);
+      } catch (err) {
+        console.error(err);
+        throw err;
+      }
     }
   }
 
@@ -134,24 +148,32 @@ export default function useProjects() {
     console.log('[useProjects] refresh projects state');
 
     // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
       if (projectsContext) {
-        const listOfRunningContainers = await getLaunchedContainers();
-        const updatedProjects: Array<Project> = projectsContext.projects.map((project) => {
-          const launchedContainersUnderProject: Array<Container> = listOfRunningContainers.filter(
-            (container) =>
-              isChildOf(container.dockerComposeLocation, project.location.replace('~', homedir())),
-          );
+        try {
+          const listOfRunningContainers = await getLaunchedContainers();
+          const updatedProjects: Array<Project> = projectsContext.projects.map((project) => {
+            const launchedContainersUnderProject: Array<Container> = listOfRunningContainers.filter(
+              (container) =>
+                isChildOf(
+                  container.dockerComposeLocation,
+                  project.location.replace('~', homedir()),
+                ),
+            );
 
-          return {
-            ...project,
-            status: launchedContainersUnderProject.length > 0 ? 'started' : 'stopped',
-          };
-        });
+            return {
+              ...project,
+              status: launchedContainersUnderProject.length > 0 ? 'started' : 'stopped',
+            };
+          });
 
-        projectsContext.setProjects(updatedProjects);
-        setJSON(updatedProjects);
-        resolve();
+          projectsContext.setProjects(updatedProjects);
+          setJSON(updatedProjects);
+          resolve();
+        } catch (err) {
+          console.error(err);
+          reject(err);
+        }
       }
       resolve();
     });

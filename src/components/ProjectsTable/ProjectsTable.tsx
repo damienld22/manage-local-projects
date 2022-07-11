@@ -26,20 +26,30 @@ const ProjectsTable = ({
   const [toDeleteProjectName, setToDeleteProjectName] = useState<string | null>(null);
   const [loadingStart, setLoadingStart] = useState<string | null>(null);
   const [loadingStop, setLoadingStop] = useState<string | null>(null);
-  const { displaySuccessMessage } = useSnackbar();
+  const { displaySuccessMessage, displayErrorMessage } = useSnackbar();
 
   const handleStart = async (name: string) => {
     setLoadingStart(name);
-    await startProject(name);
-    setLoadingStart(null);
-    displaySuccessMessage(`${name} est démarré !`);
+    try {
+      await startProject(name);
+      displaySuccessMessage(`${name} est démarré !`);
+    } catch {
+      displayErrorMessage(`Une erreur est survenue lors du lancement de ${name}`);
+    } finally {
+      setLoadingStart(null);
+    }
   };
 
   const handleStop = async (name: string) => {
     setLoadingStop(name);
-    await stopProject(name);
-    setLoadingStop(null);
-    displaySuccessMessage(`${name} est arrêté !`);
+    try {
+      await stopProject(name);
+      displaySuccessMessage(`${name} est arrêté !`);
+    } catch {
+      displayErrorMessage(`Une erreur est survenue lors de l'arrêt de ${name}`);
+    } finally {
+      setLoadingStop(null);
+    }
   };
 
   const columns: ColumnsType<Project> = [
@@ -136,9 +146,13 @@ const ProjectsTable = ({
 
   const handleDeleteConfirmation = (projectName: string | null): void => {
     if (projectName) {
-      deleteProject(projectName);
-      setToDeleteProjectName(null);
-      displaySuccessMessage(`Projet ${projectName} supprimé`);
+      try {
+        deleteProject(projectName);
+        setToDeleteProjectName(null);
+        displaySuccessMessage(`Projet ${projectName} supprimé`);
+      } catch {
+        displayErrorMessage('Une erreur est survenue lors de la suppression du projet');
+      }
     }
   };
 

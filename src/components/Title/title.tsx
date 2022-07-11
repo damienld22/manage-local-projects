@@ -12,13 +12,18 @@ interface TitleProps {
 const Title = ({ title }: TitleProps) => {
   const { refreshProjectsState } = useProjects();
   const [refreshIsLoading, setRefreshIsLoading] = useState(false);
-  const { displaySuccessMessage } = useSnackbar();
+  const { displaySuccessMessage, displayErrorMessage } = useSnackbar();
 
   const handleClickRefresh = async () => {
     setRefreshIsLoading(true);
-    await refreshProjectsState();
-    setRefreshIsLoading(false);
-    displaySuccessMessage('Status des projets mis à jour', 3);
+    try {
+      await refreshProjectsState();
+      displaySuccessMessage('Status des projets mis à jour', 3);
+    } catch {
+      displayErrorMessage('Une erreur est survenue lors de la mise à jour des status');
+    } finally {
+      setRefreshIsLoading(false);
+    }
   };
 
   return (

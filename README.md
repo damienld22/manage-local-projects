@@ -34,5 +34,6 @@ A "project" is described by one on many docker-compose files.
 - [x] Allow copy location of project to clipboard
 - [x] Edit project
 - [x] Add snackbar when actions are done
-- [ ] Error handling
+- [x] Error handling
+- [ ] Packaging
 - [ ] Install jq when install this tool

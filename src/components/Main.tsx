@@ -12,7 +12,7 @@ const Main = () => {
   const { init, projects, addNewProject, editProject } = useProjects();
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
   const [toEditProject, setToEditProject] = useState<Project | undefined>();
-  const { displaySuccessMessage } = useSnackbar();
+  const { displaySuccessMessage, displayErrorMessage } = useSnackbar();
 
   useEffect(() => {
     init();
@@ -24,11 +24,19 @@ const Main = () => {
 
   const handleCreateProject = (project: Project) => {
     if (toEditProject) {
-      editProject(toEditProject.name, project);
-      displaySuccessMessage(`Projet ${toEditProject.name} édité`);
+      try {
+        editProject(toEditProject.name, project);
+        displaySuccessMessage(`Projet ${toEditProject.name} édité`);
+      } catch {
+        displayErrorMessage("Une erreur est lors de l'édition du projet");
+      }
     } else {
-      addNewProject(project);
-      displaySuccessMessage(`Projet ${project.name} ajouté`);
+      try {
+        addNewProject(project);
+        displaySuccessMessage(`Projet ${project.name} ajouté`);
+      } catch {
+        displayErrorMessage('Une erreur est survenue lors de la création du projet');
+      }
     }
     handleClose();
   };
